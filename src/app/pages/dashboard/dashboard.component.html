@@ -11,14 +11,15 @@
             error mientras escribías el JSON
           </p>
           <div class=" card-body">
-            <textarea id=" json_input" class=" myTextArea" [(ngModel)]="input_data" name="content"
-                    rows = "18"
-                    cols = "50">         
-            </textarea>
-            <div class=" input_botton" style=" display:inline-block;" >
+            <div class="_card_input" id=_input_texarea>
+              <textarea id=" json_input" class="myTextArea" [(ngModel)]="input_data" name="content"
+                      rows = "17"
+                      >         
+              </textarea>
+            </div>
+            <div class="_card_input" id="_input_botton" >
               <button class="ui primary button" (click)="sendItem()"> Enviar </button>
             </div>
-            
           </div>     
         </form>
       </div>
@@ -29,11 +30,12 @@
           <h4 class=" card-title"> Salida de datos(json)</h4>
         </div>
         <div class=" card-body">
-          <textarea id=" json_output" class=" myTextArea" [(ngModel)]="show_data" name="content"
-		              rows = "18"
-		              cols = "50">
-          </textarea>
-          
+          <div class="_card_output">
+            <textarea id=" json_output" class="myTextArea" [(ngModel)]="show_data" name="content"
+                    rows = "17"
+                    >
+            </textarea>
+          </div>
         </div>
       </div>
     </div>
