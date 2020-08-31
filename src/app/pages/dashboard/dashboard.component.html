@@ -1,5 +1,36 @@
 
 <div class=" content">
+  <!-- new row mercadolibre_one_item_features-->
+  <div class=" row"  id="url_input">
+    <div class=" col-12" id="url_input">
+      <div class=" card card-url-input">
+        <div class=" card-header">
+          <h4 class=" card-title"> Introduce url de mercadolibre</h4>
+          <h5 class=" card-title-secondary"> ej: https://articulo.mercadolibre.com.mx/MLM-647635498-motosierra-gasolina-lenera-52-cc-barra-de-20-hkm5220-husky-_JM</h5>
+        </div>
+        <form id= "form_url_input" method="POST">
+          <!-- Pendiente cambiar a un formato más visible el error-->
+          <p id=" caption_input_url" style=" display:none; float: right; color: yellow;">
+            error en la entrada url, ajústala a una direccion válida de un item de mercadolibre mexico.
+          </p>
+          <div class=" card-body"
+          >
+            <div class="_card_input" id="_input_url_textarea">
+              <textarea id=" url_input" class="myTextArea" [(ngModel)]="input_url" name="content"
+                      rows = "2"
+                      >         
+              </textarea>
+            </div>
+            <!-- Pendiente verificar si hace falta introducir el boton de busqueda a la api
+            <div class="_card_input" id="_input_botton" >
+              <button class="ui primary button" (click)="sendItem()"> Enviar </button>
+            </div>
+            -->
+          </div>     
+        </form>
+      </div>
+    </div>
+  </div>  
   <div class=" row">
     <div class=" col-lg-6 col-md-12">
       <div class=" card card-tasks">
@@ -11,7 +42,7 @@
             error mientras escribías el JSON
           </p>
           <div class=" card-body">
-            <div class="_card_input" id=_input_texarea>
+            <div class="_card_input" id="_input_textarea">
               <textarea id=" json_input" class="myTextArea" [(ngModel)]="input_data" name="content"
                       rows = "17"
                       >         

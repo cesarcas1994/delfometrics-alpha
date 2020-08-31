@@ -17,10 +17,24 @@ pages - dashboard
     max-width: 100%;
 }
 
-#_input_texarea{
+#_input_textarea{
     width: 85%;
+}
+
+#_input_url_textarea{
+    width: 90%;
+    height: 50px;  
 }
 
 ._card_output{
     width: 85%;
+}
+
+
+#url_input{
+    height:  230px;  
+}
+
+#form_url_input{
+    height: 119px;  
 }

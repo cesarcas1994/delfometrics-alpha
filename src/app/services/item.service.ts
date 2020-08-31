@@ -32,9 +32,63 @@ import {Observable} from 'rxjs';
         //return this._http.get(url, {params: textarea_category_id_input});
     }
 
+    post_one_item_features(item_id):Observable<any>{
+
+        // Pendiente pasarlo como params
+        let url = "https://one-item-features.azurewebsites.net/www/test?item_id=";
+
+        url = url + item_id;
+        return this._http.get(url);
+
+        //return this._http.get(url, {params: textarea_category_id_input});
+    }
+
+    post_one_item_catalog(catalog_product):Observable<any>{
+
+        let url = "https://productionalpha.azurewebsites.net/api/one_item_catalog?code=RXzrvm59PH31jrMaa5KRe0lA/rro4CrMQ385FEQec2Qr1kM1V9mGEQ==&catalog_product=";
+
+        url = url + catalog_product;
+        return this._http.get(url);
+    }
+
    /*
    * Logic
    */
+
+    organizer_json_one_item_features(json_api):Object{
+
+        var myobject = new Object();
+
+        myobject["title"] = json_api["Response"]["title"];
+        myobject["site_id"] = json_api["Response"]["site_id"]
+        myobject["price"] = json_api["Response"]["price"]
+        myobject["reputation_vendor"] = json_api["Response"]["reputation_vendor"]
+        myobject["vendor_sales_completed"] = json_api["Response"]["vendor_sales_completed"]
+        myobject["logistic_type"] = json_api["Response"]["logistic_type"]
+        myobject["free_shipping"] = json_api["Response"]["free_shipping"]
+        myobject["ranking"] = json_api["Response"]["ranking"]
+        myobject["conversion"] = json_api["Response"]["conversion"]
+        myobject["condition"] = json_api["Response"]["condition"]
+        myobject["catalog_product"] = json_api["Response"]["catalog_product"]
+        myobject["video"] = json_api["Response"]["video"]
+        myobject["accepts_mercadopago"] = json_api["Response"]["accepts_mercadopago"]
+        myobject["tags"] = json_api["Response"]["tags"]
+        myobject["num_pictures"] = json_api["Response"]["num_pictures"]
+        myobject["attributes"] = json_api["Response"]["attributes"]
+        myobject["reviews_average"] = json_api["Response"]["reviews_average"]
+        myobject["reviews_total"] = json_api["Response"]["reviews_total"]
+        myobject["official_store"] = json_api["Response"]["official_store"]
+        myobject["deal_ids"] = json_api["Response"]["deal_ids"]
+        myobject["warranty"] = json_api["Response"]["warranty"]
+        myobject["listing_type_id"] = json_api["Response"]["listing_type_id"]
+
+        let json_organizer = {
+            items: [myobject],
+            category_id: json_api["Response"]["category_id"]
+        }
+        
+        return json_organizer
+    }
 
     change_day_to_month_weight(per_day_weight, per_day_sells):Object{
 

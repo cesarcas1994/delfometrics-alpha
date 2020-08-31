@@ -17,14 +17,17 @@ export class DashboardComponent implements OnInit {
   public clicked: boolean = true;
   public clicked1: boolean = false;
   public clicked2: boolean = false;
-  public json_parse_error: string = "";
   
   // apis variables
   public status: string;
   public show_response: boolean = false;
+  public json_item_one_features: any;
   public predictor_result_per_day_sells: any;
   public predictor_result_per_day_weight: any;
   public sells_month_array: any;
+  public textarea_input_value: any;
+  public item_id_url_input:string;
+  public catalog_product_url_input:string;
 
   constructor(
     private _itemService: ItemService
@@ -60,7 +63,6 @@ export class DashboardComponent implements OnInit {
             zeroLineColor: "transparent",
           },
           ticks: {
-            
             padding: 20,
             fontColor: "#9a9a9a"
           }
@@ -171,8 +173,67 @@ export class DashboardComponent implements OnInit {
   }
 
   // model object
-  textarea_input_value = {"items":[{"title":"Alimento Royal Canin perro adulto 12.5kg","site_id":"MLM","price":350,"reputation_vendor":3,"vendor_sales_completed":232,"logistic_type":"drop_off","free_shipping":"true","ranking":286,"conversion":0.019,"condition":"new","catalog_product":"false","video":"false","accepts_mercadopago":"true","tags":"good_quality_thumbnail brand_verified good_quality_picture immediate_payment cart_eligible","num_pictures":2,"attributes":"BRAND_Hill´s BREED_SIZE_Raza_pequeña FLAVOR_Pollo GTIN_2321223 ITEM_CONDITION_Nuevo","reviews_average":0,"reviews_total":0,"official_store":"false","deal_ids":"false","warranty":"true","listing_type_id":"gold_pro"}],"category_id":"MLM1077"}; 
+  //textarea_input_value = {"items":[{"title":"Alimento Royal Canin perro adulto 12.5kg","site_id":"MLM","price":350,"reputation_vendor":3,"vendor_sales_completed":232,"logistic_type":"drop_off","free_shipping":"true","ranking":286,"conversion":0.019,"condition":"new","catalog_product":"false","video":"false","accepts_mercadopago":"true","tags":"good_quality_thumbnail brand_verified good_quality_picture immediate_payment cart_eligible","num_pictures":2,"attributes":"BRAND_Hill´s BREED_SIZE_Raza_pequeña FLAVOR_Pollo GTIN_2321223 ITEM_CONDITION_Nuevo","reviews_average":0,"reviews_total":0,"official_store":"false","deal_ids":"false","warranty":"true","listing_type_id":"gold_pro"}],"category_id":"MLM1077"}; 
 
+  set input_url(v) {
+
+    if((this.checker_url_format(v) == "logic_error") || (this.checker_url_format(v) == "url_format_error")){
+      this.input_Url_Error("block");
+      console.log("error", this.checker_url_format(v));
+    }
+
+    else if(this.checker_url_format(v) == "found item_catalog"){
+
+      this.input_Url_Error("none");
+        this._itemService.post_one_item_catalog(this.catalog_product_url_input).subscribe(
+          response =>{
+            let item_id = response.response;
+
+            //search item features in php api
+
+            this._itemService.post_one_item_features(item_id).subscribe(
+              response =>{
+                this.json_item_one_features = response;
+                this.textarea_input_value = this._itemService.organizer_json_one_item_features(this.json_item_one_features);
+              
+              },
+              error => {
+                console.log(error);
+                this.status = 'error';
+              }
+            )
+            //this.input_Url_Error("none");}        
+          },
+          error => {
+            console.log("error calling azure function one_item_catalog, error: ", error)
+          }
+        );  
+    }
+
+    else if(this.checker_url_format(v) == "found item_id"){
+
+      this.input_Url_Error("none");
+        let item_id = this.item_id_url_input;
+
+        //search item features in php api
+
+        this._itemService.post_one_item_features(item_id).subscribe(
+          response =>{
+            this.json_item_one_features = response;
+            this.textarea_input_value = this._itemService.organizer_json_one_item_features(this.json_item_one_features);
+            
+          },
+          error => {
+            console.log(error);
+            this.status = 'error';
+          }
+        )
+        //this.input_Url_Error("none");}
+    }
+    
+  }
+
+  // input_data
   get input_data () {
     return JSON.stringify(this.textarea_input_value, null, 2);
   }
@@ -188,6 +249,7 @@ export class DashboardComponent implements OnInit {
 
   }
 
+  // show_data
   get show_data(){
       return JSON.stringify(this.predictor_result_per_day_sells, null, 2);
   }
@@ -206,6 +268,19 @@ export class DashboardComponent implements OnInit {
     return "error occurred while you were typing the JSON";
   }
   
+  public input_Url_Error(v) {
+    var x = document.getElementById(" caption_input_url");
+
+    switch (v){
+    case 'none':
+      x.style.display = "none";
+    break;
+    case 'block':
+      x.style.display = "block";
+    break;
+    }
+  }
+
   public json_Parse_Error(v) {
     var x = document.getElementById(" caption_json_parse");
 
@@ -218,7 +293,7 @@ export class DashboardComponent implements OnInit {
     break;
     }
   }
-  
+
   //Pendiente cambiar a dependender de llamada success
   public chart_Screen_Section() {
     var x = document.getElementById(" chart_row");
@@ -227,7 +302,62 @@ export class DashboardComponent implements OnInit {
     } 
 
   }
-  
+
+  /*
+  * logic
+  */
+   
+  checker_url_format(url_input):string{
+
+    try {
+        // case item - not Catalogue
+            
+            var myarr = url_input.split("-");
+
+            if((myarr[1].match(/^[0-9]+$/) != null) || (parseInt(myarr[1]) > 1000)){ 
+              this.item_id_url_input = "MLM" + myarr[1];
+              return "found item_id";
+            }
+
+            //Check that the value is a number format item_id form meli
+            //if((myarr[1].match(/^[0-9]+$/) == null) || (parseInt(myarr[1]) < 1000)){ return "error";} 
+
+        // case item - it is Catalogue
+
+            var catalog_product = "";
+            //case "?" after item_id
+            
+            var myarr = url_input.split("p/");
+            var myarr2 = myarr[1].split("?");
+            var search_pos_product = myarr2[0].split("MLM");
+            var search_pos_product_number = search_pos_product[1];
+            if ((search_pos_product_number.match(/^[0-9]+$/) != null) && (parseInt(search_pos_product_number) > 1000)){
+                catalog_product = "MLM" + search_pos_product_number;
+
+            }
+            //case "/" after item_id
+
+            var myarr = url_input.split("p/");
+            var myarr2 = myarr[1].split("/");
+            var link_pos_product = myarr2[0].split("MLM");
+            var link_pos_product_number = link_pos_product[1];
+            if ((link_pos_product_number.match(/^[0-9]+$/) != null) && (parseInt(link_pos_product_number) > 1000)){
+                catalog_product = "MLM" + link_pos_product_number;
+
+            }
+      
+            if(catalog_product != ""){
+              //logic get item_id from product_catalogue
+              this.catalog_product_url_input = catalog_product;
+              return "found item_catalog";
+            }
+
+        return "url_format_error"; 
+    } catch (error) {
+      console.log("checker_url_format error : ",error)
+        return "logic_error";
+    }  
+  }
 }
 
 
