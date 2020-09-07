@@ -14,6 +14,13 @@ export const ROUTES: RouteInfo[] = [
     rtlTitle: "لوحة القيادة",
     icon: "icon-chart-pie-36",
     class: ""
+  },
+  {
+    path: "/notifications",
+    title: "API",
+    rtlTitle: "إخطارات",
+    icon: "icon-atom",
+    class: ""
   }/* 
   * Elastic nav,
   *
@@ -30,7 +37,8 @@ export const ROUTES: RouteInfo[] = [
     title: "Maps",
     rtlTitle: "خرائط",
     icon: "icon-pin",
-    class: "" },
+    class: "" 
+  },
   {
     path: "/notifications",
     title: "Notifications",
