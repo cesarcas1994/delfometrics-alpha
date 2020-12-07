@@ -1,6 +1,8 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders } from '@angular/common/http';
 import {Observable} from 'rxjs';
+import {Categories_to_train} from '../models/categories_to_train';
+import {Categories_to_time} from '../models/categories_to_time';
 
  @Injectable()
  export class ItemService{
@@ -11,6 +13,7 @@ import {Observable} from 'rxjs';
 
     }
     
+    //TODO cambiar los post por get a las llamadas que son get(ahora todos son post)
     post_item_per_day_sells(textarea_input):Observable<any>{
         
         let body = JSON.stringify(textarea_input.textarea);
@@ -49,6 +52,33 @@ import {Observable} from 'rxjs';
 
         url = url + catalog_product;
         return this._http.get(url);
+    }
+
+    post_dinamic_ml_categories_training(category_id):Observable<any>{
+
+        let body_object: Categories_to_train = { input_category_id: category_id };
+
+        let body = JSON.stringify(body_object);
+        let post_headers = new HttpHeaders().set('Content-Type', 'application/json');
+        /*let post_headers =  new HttpHeaders({
+            'Content-Type':  'application/json',
+            'Authorization': ''
+          });
+          */
+        let url = "https://prod-09.centralus.logic.azure.com:443/workflows/bb8b6cd07e8b4f2ebf6e436d8baee782/triggers/request/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Frequest%2Frun&sv=1.0&sig=6KiSJiRLYathVAJYJHv_zdv_Ckin2QXaSKL4Qp2lXTk";
+        
+        return this._http.post(url, body, {headers: post_headers});
+    }
+
+    post_time_category_training(category_id_to_time):Observable<any>{
+
+        let body_object: Categories_to_time = {category_id: category_id_to_time};
+
+        let body = JSON.stringify(body_object);
+        let post_headers = new HttpHeaders().set('Content-Type', 'application/json');
+        let url = "https://mlconexionmeli.azurewebsites.net/api/time_category_training";
+        
+        return this._http.post(url, body, {headers: post_headers});
     }
 
    /*

@@ -71,6 +71,26 @@
       </div>
     </div>
   </div>
+  <div class=" row" id=" category_training_row" style=" display:none">
+    <div class=" col-12">
+      <div class=" card card-categorytraining-input">
+        <div class=" card-header">
+          <h4 class=" card-title"> Entrenamiento de categoría</h4>
+            <!-- TODO Cuando el sitio sea dinamico agregar mensaje de logearse antes de poder entrenar la categoria-->
+            <!-- TODO Cuando el sitio sea dinamico agregar un hola {nombre del usuario}-->
+          <h5 class=" card-title-secondary" id=" message_category_training_row">
+            La categoría de items no se encuentra en la base de datos pero esta pudiera ser entrenada
+          </h5>       
+          <h5 class=" card-title-secondary" id=" time_category_training_row">
+             <!-- TODO aquí se agrega el mensaje de tiempo de espera-->
+          </h5>     
+        </div>
+        <div class="_card_output" id="_training_botton">
+          <button class="ui primary button"  style="left: 50%; position: relative;" (click)="trainCategory()"> Entrenar Categoría </button>
+        </div>
+      </div>
+    </div>
+  </div>
  <!--Pendiente decidir si borrar o no usarlo de plantilla para graph dinamico
   <div class=" row">
     <div class=" col-12">

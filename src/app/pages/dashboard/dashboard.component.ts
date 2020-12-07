@@ -138,11 +138,14 @@ export class DashboardComponent implements OnInit {
     
     this._itemService.post_item_per_day_sells(textarea_input).subscribe(
       response =>{
+        // hide screens
+        this.category_training_Screen_Section("none");
+        
         this.predictor_result_per_day_sells = response;
 
         /*
         *if api call success then call weight calculation
-        */
+        */ 
         if(response.prediccion != null){
           
           this._itemService.post_item_per_day_weight(textarea_input).subscribe(
@@ -168,8 +171,55 @@ export class DashboardComponent implements OnInit {
       error => {
         this.predictor_result_per_day_sells = error.error;
         this.status = 'error';
+
+        if(error.error.error == "No se encuentra esa categoria en base de datos, posteriormente la adicionaremos en la base de datos"){
+          this.category_training_Screen_Section("block");
+
+          let category_id = textarea_input.textarea.category_id;
+          //show time
+          this._itemService.post_time_category_training(category_id).subscribe(
+            response =>{
+              //TODO change to time format: horas: min, ex: 1h 45min. 
+              let time_to_train = response * 4;
+
+              var message = document.getElementById(" time_category_training_row");
+              message.innerHTML = "El tiempo de desarrollo de esta categoría" + category_id + " es: " + time_to_train + " segundos";
+            },
+            error => {
+              console.log(error);
+              this.status = 'error';
+            }
+          )   
+        }
+        else{
+          this.category_training_Screen_Section("none");
+          //TODO all logic came here 400 and other 404 different than if, add if else in case of expansion on logic
+    
+        }
       }
     );
+  }
+
+  //TODO Complete trainCategory  
+  public trainCategory() {
+    let textarea_input: Comment = { textarea: this.textarea_input_value };
+    let category_id = textarea_input.textarea.category_id;
+
+    category_id = category_id.toLowerCase();
+    
+    this._itemService.post_dinamic_ml_categories_training(category_id).subscribe(
+      response =>{
+        console.log("already sent to train the category: ", category_id);
+        var message = document.getElementById(" message_category_training_row");
+        message.innerHTML = "Ya se está entrenando la categoría: " + category_id + " pronto podrás repetir el proceso y obtendrás la predicción de ventas";
+      },
+      error => {
+        //TODO reportar los problemas a una base de datos en azure
+        var message = document.getElementById(" message_category_training_row");
+        message.innerHTML = "No se pudo poner a entrenar la categoría: " + category_id + " Comunicate con contactos para informar el problema";
+        console.log(error.error);
+      }
+    )
   }
 
   // model object
@@ -301,6 +351,27 @@ export class DashboardComponent implements OnInit {
       x.style.display = "block";
     } 
 
+  }
+
+  public category_training_Screen_Section(v) {
+    var x = document.getElementById(" category_training_row");
+
+    switch (v){
+      case 'none':
+        x.style.display = "none";
+      break;
+      case 'block':
+        x.style.display = "block";
+      break;
+    }
+    /*
+    if (x.style.display === "none") {
+      x.style.display = "block";
+    } 
+    else if(x.style.display === "block") {
+      x.style.display = "none";
+    } 
+    */
   }
 
   /*
