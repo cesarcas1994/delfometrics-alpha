@@ -140,7 +140,7 @@ export class DashboardComponent implements OnInit {
       response =>{
         // hide screens
         this.category_training_Screen_Section("none");
-        
+
         this.predictor_result_per_day_sells = response;
 
         /*
@@ -180,10 +180,10 @@ export class DashboardComponent implements OnInit {
           this._itemService.post_time_category_training(category_id).subscribe(
             response =>{
               //TODO change to time format: horas: min, ex: 1h 45min. 
-              let time_to_train = response * 4;
+              let time_to_train = response;
 
               var message = document.getElementById(" time_category_training_row");
-              message.innerHTML = "El tiempo de desarrollo de esta categoría" + category_id + " es: " + time_to_train + " segundos";
+              message.innerHTML = "El tiempo de desarrollo de esta categoría: " + category_id + " es: " + time_to_train + " segundos";
             },
             error => {
               console.log(error);
