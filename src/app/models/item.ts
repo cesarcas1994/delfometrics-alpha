@@ -1,3 +1,9 @@
 export interface Comment {
-    textarea: object;
+    textarea: textarea;
 }
+
+export interface textarea {
+    category_id: string;
+}
+
+
