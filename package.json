@@ -1,5 +1,5 @@
 {
-  "name": "delfometrics",
+  "name": "melicomparador",
   "version": "1.0.0",
   "description": "Performance analysis in online markets. Coded by Cesar Cas",
   "scripts": {
@@ -53,7 +53,7 @@
     " free admin dashboard",
     "free bootstrap 4 admin dashboard"
   ],
-  "author": "Cesar Cas (https://delfometrics.com/)",
+  "author": "Cesar Cas",
   "license": "MIT",
   "private": false,
   "dependencies": {
